@@ -1,0 +1,57 @@
+[
+  {
+    "title": "Luxury Villa",
+    "location": "Mogadishu",
+    "price": "1245",
+    "image": "/images/home5.jpg",
+    "beds": "2",
+    "baths": "1",
+    "area": "1456",
+    "userId": "1748514801087",
+    "id": 1748514864418
+  },
+  {
+    "title": "The best house",
+    "location": "london",
+    "price": "1457",
+    "image": "/images/home5.jpg",
+    "beds": "1",
+    "baths": "1",
+    "area": "1245",
+    "userId": "1748514355206",
+    "id": 1748805594072
+  },
+  {
+    "title": "Cozy Apartment 2",
+    "location": "Mogadishu",
+    "price": "1245",
+    "image": "/images/home7.jpg",
+    "beds": "2",
+    "baths": "1",
+    "area": "1456",
+    "userId": "1748514355206",
+    "id": 1748805621521
+  },
+  {
+    "title": "Modern House",
+    "location": "Jijiga",
+    "price": "1245",
+    "image": "/images/home6.jpg",
+    "beds": "3",
+    "baths": "1",
+    "area": "1456",
+    "userId": "1748514355206",
+    "id": 1748806873374
+  },
+  {
+    "title": "Modern House",
+    "location": "Mogadishu",
+    "price": "1234",
+    "image": "/images/home3.jpg",
+    "beds": "2",
+    "baths": "1",
+    "area": "1245",
+    "userId": "1748514355206",
+    "id": 1748935891849
+  }
+]

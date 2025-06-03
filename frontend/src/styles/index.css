@@ -1,0 +1,143 @@
+@import "root.css";
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+.about,
+.why-us,
+.testimonials {
+  padding: 2.2rem 0;
+  background: var(--primary-card);
+  text-align: center;
+  border-radius: 1.1rem;
+  margin: 1.5rem 0;
+  box-shadow: 0 2px 10px 0 rgba(36, 42, 66, 0.04);
+}
+.about h2,
+.why-us h2,
+.testimonials h2 {
+  color: var(--primary);
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+.about p,
+.why-us p {
+  max-width: 700px;
+  margin: 0 auto;
+  font-size: 1.08rem;
+  color: var(--gray-700);
+  line-height: 1.6;
+}
+.features {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.1rem;
+  list-style: none;
+  margin: 1.2rem 0 0 0;
+}
+.features li {
+  background: var(--primary-accent);
+  color: #fff;
+  font-weight: 700;
+  padding: 0.9rem 1.7rem;
+  border-radius: 1.7rem;
+  min-width: 140px;
+  box-shadow: 0 4px 10px rgba(34, 197, 94, 0.09);
+  transition: background 0.18s, color 0.18s;
+}
+.features li:hover {
+  background: var(--primary);
+  color: #fff;
+}
+.testimonial-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+.testimonial {
+  background: var(--secondary);
+  color: var(--primary-text);
+  padding: 1.5rem;
+  border-radius: 1.1rem;
+  font-style: italic;
+  box-shadow: 0 6px 12px rgba(251, 191, 36, 0.11);
+  transition: box-shadow 0.18s;
+}
+.testimonial:hover {
+  box-shadow: 0 8px 18px rgba(251, 191, 36, 0.18);
+}
+.testimonial span {
+  display: block;
+  margin-top: 1rem;
+  font-weight: 700;
+  font-style: normal;
+  color: var(--secondary-accent);
+}
+.pagination-nav {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: 2rem 0 3rem 0;
+}
+.pagination-btn {
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.7rem 1.3rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.16s, color 0.16s, box-shadow 0.16s;
+  box-shadow: 0 2px 8px 0 rgba(36, 42, 66, 0.07);
+}
+.pagination-btn.active,
+.pagination-btn:focus {
+  background: var(--primary-accent);
+  color: #fff;
+  outline: none;
+}
+.pagination-btn:disabled {
+  background: var(--gray-200);
+  color: var(--gray-400);
+  cursor: not-allowed;
+}
+@media (max-width: 900px) {
+  .container {
+    padding: 0 1rem;
+  }
+  h1 {
+    font-size: 2.8rem;
+  }
+  h2 {
+    font-size: 2rem;
+  }
+  h3 {
+    font-size: 1.4rem;
+  }
+}
+@media (max-width: 600px) {
+  body {
+    font-size: 1.6rem;
+  }
+  .about p,
+  .why-us p {
+    font-size: 1rem;
+  }
+  .features li {
+    padding: 0.7rem 1.2rem;
+    font-size: 0.9rem;
+  }
+  .testimonial {
+    padding: 1.2rem;
+  }
+  .pagination-btn {
+    padding: 0.6rem 1.2rem;
+    font-size: 1rem;
+  }
+}

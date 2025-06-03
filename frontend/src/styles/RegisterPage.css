@@ -1,0 +1,145 @@
+/* Registration Page Styles */
+.register-container {
+  max-width: 430px;
+  margin: 4.5rem auto;
+  padding: 2.7rem 2.2rem;
+  background: var(--primary-card);
+  border-radius: 1.3rem;
+  box-shadow: 0 4px 24px var(--gray-200);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.register-container h2 {
+  text-align: center;
+  color: var(--primary-accent);
+  margin-bottom: 2.2rem;
+  font-size: 2.1rem;
+  font-weight: 900;
+  letter-spacing: -1px;
+}
+
+.register-container form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.register-container form > div {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1.1rem;
+}
+
+.register-container label {
+  font-weight: 700;
+  margin-bottom: 0.4rem;
+  color: var(--primary-text);
+  font-size: 1.08rem;
+  letter-spacing: 0.01em;
+}
+
+.register-container input[type="text"],
+.register-container input[type="email"],
+.register-container input[type="password"] {
+  padding: 1rem 1.2rem;
+  border: 1.5px solid var(--primary-accent);
+  border-radius: 9px;
+  font-size: 1.15rem;
+  outline: none;
+  background: var(--primary-bg);
+  transition: border-color 0.18s, box-shadow 0.18s;
+  box-shadow: 0 2px 8px var(--gray-100);
+  color: var(--primary-text);
+}
+
+.register-container input:focus {
+  border-color: var(--secondary-accent);
+  background: var(--primary-card);
+  box-shadow: 0 0 0 2px var(--secondary-accent);
+}
+
+.register-container button[type="submit"] {
+  background: var(--primary-accent);
+  color: var(--primary-card);
+  padding: 0.95rem 0;
+  border: none;
+  border-radius: 30px;
+  font-size: 1.18rem;
+  font-weight: 800;
+  cursor: pointer;
+  margin-top: 1rem;
+  transition: background 0.18s, color 0.18s, box-shadow 0.18s;
+  box-shadow: 0 2px 8px var(--primary-accent);
+}
+
+.register-container button[type="submit"]:hover {
+  background: var(--secondary-accent);
+  color: var(--primary-card);
+  box-shadow: 0 4px 18px var(--secondary-accent);
+}
+
+.register-container .register-error {
+  color: var(--secondary-accent);
+  background: var(--gray-100);
+  border-radius: 0.5rem;
+  padding: 0.7rem 1rem;
+  margin-top: 0.7rem;
+  font-size: 1.05rem;
+  text-align: center;
+  font-weight: 600;
+}
+
+.register-container .register-success {
+  color: var(--primary-accent);
+  background: var(--gray-100);
+  border-radius: 0.5rem;
+  padding: 0.7rem 1rem;
+  margin-top: 0.7rem;
+  font-size: 1.05rem;
+  text-align: center;
+  font-weight: 600;
+}
+
+.register-container p {
+  text-align: center;
+  margin-top: 1.5rem;
+  font-size: 1.05rem;
+  color: var(--primary-text);
+}
+
+.register-container a {
+  color: var(--primary-accent);
+  text-decoration: underline;
+  font-weight: 700;
+  transition: color 0.18s;
+}
+
+.register-container a:hover {
+  color: var(--secondary-accent);
+}
+
+@media (max-width: 600px) {
+  .register-container {
+    padding: 1.2rem 0.5rem;
+    border-radius: 0.7rem;
+  }
+
+  .register-container h2 {
+    font-size: 1.5rem;
+  }
+
+  .register-container input[type="text"],
+  .register-container input[type="email"],
+  .register-container input[type="password"] {
+    font-size: 1rem;
+    padding: 0.8rem 0.7rem;
+  }
+
+  .register-container button[type="submit"] {
+    font-size: 1rem;
+    padding: 0.8rem 0;
+  }
+}

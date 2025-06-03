@@ -1,0 +1,16 @@
+[
+  {
+    "id": 1748514355206,
+    "name": "Rabile Yassin",
+    "email": "rabile@mail.com",
+    "password": "$2b$10$xlhqXcvhILurplGfgseZlOkbhWI5XmNlZUmEx.aNGGdEfznYq/sCm",
+    "role": "user"
+  },
+  {
+    "id": 1748514801087,
+    "name": "Abdi Farax",
+    "email": "abdi@mail.com",
+    "password": "$2b$10$.ZOwhyF9MW.9Vin5XB9cZeT1QqM5bB3gr2PsYY5eDf3hCWz4TFzz6",
+    "role": "user"
+  }
+]
