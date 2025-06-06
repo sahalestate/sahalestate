@@ -77,10 +77,16 @@
   box-shadow: 0 0 0 2px var(--secondary-accent);
 }
 
+.dashboard-section ul {
+  display: grid;
+  gap: 1rem;
+}
+
 .dashboard-section li {
   display: flex;
   align-items: center;
-  padding: 2rem;
+  padding: 0.8rem;
+  gap: 1rem;
   border-bottom: 1px solid var(--primary-accent);
   border-radius: 1.2rem;
   background-color: var(--gray-200);

@@ -4,7 +4,7 @@
     "location": "Mogadishu",
     "price": "1245",
     "image": "/images/home5.jpg",
-    "beds": "2",
+    "beds": "3",
     "baths": "1",
     "area": "1456",
     "userId": "1748514801087",
@@ -13,9 +13,9 @@
   {
     "title": "The best house",
     "location": "london",
-    "price": "1457",
+    "price": "145",
     "image": "/images/home5.jpg",
-    "beds": "1",
+    "beds": "3",
     "baths": "1",
     "area": "1245",
     "userId": "1748514355206",
@@ -37,7 +37,7 @@
     "location": "Jijiga",
     "price": "1245",
     "image": "/images/home6.jpg",
-    "beds": "3",
+    "beds": "7",
     "baths": "1",
     "area": "1456",
     "userId": "1748514355206",
@@ -53,5 +53,16 @@
     "area": "1245",
     "userId": "1748514355206",
     "id": 1748935891849
+  },
+  {
+    "title": "Luxury Villa",
+    "location": "Mogadishu",
+    "price": "1245",
+    "image": "/images/home6.jpg",
+    "beds": "2",
+    "baths": "3",
+    "area": "1245",
+    "userId": "1748514355206",
+    "id": 1748978236258
   }
 ]

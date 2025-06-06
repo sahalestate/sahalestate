@@ -4,7 +4,7 @@ const path = require("path");
 const cors = require("cors");
 const bcrypt = require("bcryptjs");
 const app = express();
-const PORT = 5000;
+const PORT = 3000;
 
 app.use(cors());
 app.use(express.json());
@@ -89,11 +89,13 @@ app.post("/api/login", (req, res) => {
     if (!match) {
       return res.status(401).json({ error: "Invalid email or password." });
     }
+    // Include email in the login response
     res.json({
       message: "Login successful!",
       userId: user.id, // Include userId in the response
       name: user.name,
       role: user.role,
+      email: user.email, // Added email to the response
     });
   });
 });

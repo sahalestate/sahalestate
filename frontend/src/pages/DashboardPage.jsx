@@ -22,9 +22,20 @@ function DashboardPage() {
   const [userForm, setUserForm] = useState({
     name: "",
     email: "",
+    password: "",
+    role: "",
   });
   const [filteredListings, setFilteredListings] = useState([]);
-  const [confirmationMessage, setConfirmationMessage] = useState("");
+  const [listingConfirmationMessage, setListingConfirmationMessage] =
+    useState("");
+  const [userConfirmationMessage, setUserConfirmationMessage] = useState("");
+
+  // Check if the user is an admin
+  const [isAdmin, setIsAdmin] = useState(false);
+  useEffect(() => {
+    const userRole = localStorage.getItem("userRole"); // Assume userRole is stored in localStorage
+    setIsAdmin(userRole === "admin");
+  }, []);
 
   // Fetch listings and users from backend
   useEffect(() => {
@@ -32,7 +43,7 @@ function DashboardPage() {
       try {
         const userId = localStorage.getItem("userId"); // Assume userId is stored in localStorage
         const listingsRes = await fetch(
-          `http://localhost:5000/api/listings?userId=${userId}`
+          `http://localhost:3000/api/listings?userId=${userId}`
         );
         if (!listingsRes.ok) throw new Error("Failed to fetch listings");
         const listingsData = await listingsRes.json();
@@ -46,8 +57,54 @@ function DashboardPage() {
   }, []);
 
   useEffect(() => {
-    setFilteredListings(listings);
+    setFilteredListings(Array.isArray(listings) ? listings : []);
   }, [listings]);
+
+  // Fetch users from backend
+  useEffect(() => {
+    async function fetchUsers() {
+      try {
+        const response = await fetch("http://localhost:3000/api/users");
+        if (!response.ok) throw new Error("Failed to fetch users");
+        const usersData = await response.json();
+        setUsers(Array.isArray(usersData) ? usersData : []);
+      } catch (err) {
+        console.error("Error loading users:", err);
+        setUsers([]); // Fallback to empty array
+      }
+    }
+    fetchUsers();
+  }, []);
+
+  // Debugging logs
+  useEffect(() => {}, [users]);
+
+  // Updated admin check logic to use backend data
+  useEffect(() => {
+    async function checkAdminAccess() {
+      try {
+        const response = await fetch("http://localhost:3000/api/users");
+        if (!response.ok) throw new Error("Failed to fetch users");
+        const usersData = await response.json();
+
+        const userEmail = localStorage.getItem("userEmail");
+
+        const currentUser = usersData.find(
+          (user) => user.email.toLowerCase() === userEmail?.toLowerCase()
+        );
+
+        if (currentUser) {
+          setIsAdmin(currentUser.role?.toLowerCase() === "admin");
+        } else {
+          setIsAdmin(false);
+        }
+      } catch (error) {
+        setIsAdmin(false);
+      }
+    }
+
+    checkAdminAccess();
+  }, []);
 
   // Listings CRUD handlers
   const handleListingChange = (e) => {
@@ -57,15 +114,17 @@ function DashboardPage() {
     e.preventDefault();
     let userId = localStorage.getItem("userId");
     if (!userId) {
-      setConfirmationMessage("Error: User ID is missing. Please log in again.");
+      setListingConfirmationMessage(
+        "Error: User ID is missing. Please log in again."
+      );
       return;
     }
     if (!listingForm.title || !listingForm.location || !listingForm.price) {
-      setConfirmationMessage("All fields are required.");
+      setListingConfirmationMessage("All fields are required.");
       return;
     }
     try {
-      const response = await fetch("http://localhost:5000/api/listings", {
+      const response = await fetch("http://localhost:3000/api/listings", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...listingForm, userId }),
@@ -86,9 +145,9 @@ function DashboardPage() {
         baths: "",
         area: "",
       });
-      setConfirmationMessage("Listing added successfully!");
+      setListingConfirmationMessage("Listing added successfully!");
     } catch (error) {
-      setConfirmationMessage("Error adding listing: " + error.message);
+      setListingConfirmationMessage("Error adding listing: " + error.message);
     }
   };
   const handleEditListing = (listing) => {
@@ -107,7 +166,7 @@ function DashboardPage() {
     e.preventDefault();
     try {
       const res = await fetch(
-        `http://localhost:5000/api/listings/${editingListing}`,
+        `http://localhost:3000/api/listings/${editingListing}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -126,15 +185,16 @@ function DashboardPage() {
         baths: "",
         area: "",
       });
+      setListingConfirmationMessage("Listing updated successfully!");
     } catch (err) {
-      alert("Error updating listing: " + err.message);
+      setListingConfirmationMessage("Error updating listing: " + err.message);
     }
   };
   const handleDeleteListing = async (id) => {
     if (!window.confirm("Are you sure you want to delete this listing?"))
       return;
     try {
-      const res = await fetch(`http://localhost:5000/api/listings/${id}`, {
+      const res = await fetch(`http://localhost:3000/api/listings/${id}`, {
         method: "DELETE",
       });
       if (!res.ok) throw new Error("Failed to delete listing");
@@ -148,43 +208,75 @@ function DashboardPage() {
   const handleUserChange = (e) => {
     setUserForm({ ...userForm, [e.target.name]: e.target.value });
   };
-  const handleEditUser = (user) => {
-    setEditingUser(user.id);
-    setUserForm({ name: user.name, email: user.email });
-  };
-  const handleUpdateUser = async (e) => {
+  const handleAddUser = async (e) => {
     e.preventDefault();
-    if (!userForm.name || !userForm.email) {
-      alert("All fields are required.");
+    if (
+      !userForm.name ||
+      !userForm.email ||
+      !userForm.password ||
+      !userForm.role
+    ) {
+      setUserConfirmationMessage("All fields are required.");
       return;
     }
     try {
-      const res = await fetch(
-        `http://localhost:5000/api/users/${editingUser}`,
+      const response = await fetch("http://localhost:3000/api/users", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(userForm),
+      });
+      if (!response.ok) throw new Error("Failed to add user");
+      const newUser = await response.json();
+      setUsers((prevUsers) => [...prevUsers, newUser]);
+      setUserForm({ name: "", email: "", password: "", role: "" });
+      setUserConfirmationMessage("User added successfully!");
+    } catch (error) {
+      setUserConfirmationMessage("Error adding user: " + error.message);
+    }
+  };
+  const handleEditUser = (user) => {
+    setEditingUser(user.id);
+    setUserForm({
+      name: user.name,
+      email: user.email,
+      password: "", // Password should not be pre-filled for security reasons
+      role: user.role,
+    });
+  };
+  const handleUpdateUser = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch(
+        `http://localhost:3000/api/users/${editingUser}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(userForm),
         }
       );
-      if (!res.ok) throw new Error("Failed to update user");
-      setUsers(await res.json());
+      if (!response.ok) throw new Error("Failed to update user");
+      const updatedUsers = await response.json();
+      setUsers(Array.isArray(updatedUsers) ? updatedUsers : []);
       setEditingUser(null);
-      setUserForm({ name: "", email: "" });
-    } catch (err) {
-      alert("Error updating user: " + err.message);
+      setUserForm({ name: "", email: "", password: "", role: "" });
+      setUserConfirmationMessage("User updated successfully!");
+    } catch (error) {
+      setUserConfirmationMessage("Error updating user: " + error.message);
     }
   };
-  const handleDeleteUser = async (id) => {
+  const handleDeleteUser = async (userId) => {
     if (!window.confirm("Are you sure you want to delete this user?")) return;
     try {
-      const res = await fetch(`http://localhost:5000/api/users/${id}`, {
-        method: "DELETE",
-      });
-      if (!res.ok) throw new Error("Failed to delete user");
-      setUsers(await res.json());
-    } catch (err) {
-      alert("Error deleting user: " + err.message);
+      const response = await fetch(
+        `http://localhost:3000/api/users/${userId}`,
+        {
+          method: "DELETE",
+        }
+      );
+      if (!response.ok) throw new Error("Failed to delete user");
+      setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId));
+    } catch (error) {
+      alert("Error deleting user: " + error.message);
     }
   };
 
@@ -203,9 +295,19 @@ function DashboardPage() {
   return (
     <>
       <div className="dashboard-container">
-        {/* {confirmationMessage && (
-          <div className="confirmation-message">{confirmationMessage}</div>
-        )} */}
+        {/* Display confirmation message at the top */}
+        {listingConfirmationMessage && (
+          <div className="confirmation-message" style={{ marginTop: "8px" }}>
+            {listingConfirmationMessage}
+          </div>
+        )}
+        {userConfirmationMessage && (
+          <div className="confirmation-message" style={{ marginTop: "8px" }}>
+            {userConfirmationMessage}
+          </div>
+        )}
+
+        {/* Navigation links */}
         <div className="dashboard-nav">
           <button
             className={`dashboard-link${
@@ -311,9 +413,12 @@ function DashboardPage() {
                 )}
               </form>
               {/* ###### */}
-              {confirmationMessage && (
-                <div className="confirmation-message">
-                  {confirmationMessage}
+              {listingConfirmationMessage && (
+                <div
+                  className="confirmation-message"
+                  style={{ marginTop: "8px" }}
+                >
+                  {listingConfirmationMessage}
                 </div>
               )}
 
@@ -338,6 +443,7 @@ function DashboardPage() {
                       Edit
                     </button>
                     <button
+                      type="button"
                       className="dashboard-link delete"
                       onClick={() => handleDeleteListing(listing.id)}
                     >
@@ -348,13 +454,11 @@ function DashboardPage() {
               </ul>
             </section>
           )}
-          {activeTab === "user" && (
+          {activeTab === "user" && isAdmin && (
             <section className="dashboard-section">
               <div className="dashboard-section-title">Users</div>
               <form
-                onSubmit={
-                  editingUser ? handleUpdateUser : (e) => e.preventDefault()
-                }
+                onSubmit={editingUser ? handleUpdateUser : handleAddUser}
                 style={{ marginBottom: 16 }}
               >
                 <input
@@ -371,31 +475,50 @@ function DashboardPage() {
                   placeholder="Email"
                   className="dashboard-input"
                 />
+                <input
+                  name="password"
+                  value={userForm.password}
+                  onChange={handleUserChange}
+                  placeholder="Password"
+                  type="password"
+                  className="dashboard-input"
+                />
+                <select
+                  name="role"
+                  value={userForm.role}
+                  onChange={handleUserChange}
+                  className="dashboard-input"
+                >
+                  <option value="">Select Role</option>
+                  <option value="admin">Admin</option>
+                  <option value="user">User</option>
+                </select>
+                <button type="submit" className="dashboard-link">
+                  {editingUser ? "Update" : "Add"} User
+                </button>
                 {editingUser && (
-                  <>
-                    <button type="submit" className="dashboard-link">
-                      Save
-                    </button>
-                    <button
-                      type="button"
-                      className="dashboard-link cancel"
-                      onClick={() => {
-                        setEditingUser(null);
-                        setUserForm({ name: "", email: "" });
-                      }}
-                    >
-                      Cancel
-                    </button>
-                  </>
+                  <button
+                    type="button"
+                    className="dashboard-link cancel"
+                    onClick={() => {
+                      setEditingUser(null);
+                      setUserForm({
+                        name: "",
+                        email: "",
+                        password: "",
+                        role: "",
+                      });
+                    }}
+                  >
+                    Cancel
+                  </button>
                 )}
               </form>
               <ul>
                 {users.map((user) => (
                   <li key={user.id}>
-                    <span style={{ flex: 2, fontWeight: 600 }}>
-                      {user.name}
-                    </span>
-                    <span style={{ flex: 2 }}>{user.email}</span>
+                    <span>{user.name}</span>
+                    <span>{user.email}</span>
                     <button
                       className="dashboard-link"
                       onClick={() => handleEditUser(user)}
@@ -412,6 +535,11 @@ function DashboardPage() {
                 ))}
               </ul>
             </section>
+          )}
+          {!isAdmin && activeTab === "user" && (
+            <div className="dashboard-section-title">
+              Access Denied: Admins Only
+            </div>
           )}
         </div>
       </div>

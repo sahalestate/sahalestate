@@ -13,7 +13,7 @@ function ListingsPage() {
   const listingsPerPage = 8;
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/listings")
+    fetch("http://localhost:3000/api/listings")
       .then((res) => res.json())
       .then((data) => {
         setAllListings(data);
@@ -54,7 +54,7 @@ function ListingsPage() {
         title="Browse All Listings"
         subtitle="Search and explore our full property catalog"
         onSearch={handleBackendSearch}
-        backendUrl="http://localhost:5000/api/listings"
+        backendUrl="http://localhost:3000/api/listings"
         placeholder="Search by city, ZIP, or keyword"
       />
       <Listings listings={paginatedListings} />

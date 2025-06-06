@@ -8,7 +8,7 @@ function HomePage() {
   const [allListings, setAllListings] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/listings")
+    fetch("http://localhost:3000/api/listings")
       .then((res) => res.json())
       .then((data) => {
         const validData = Array.isArray(data) ? data : [];

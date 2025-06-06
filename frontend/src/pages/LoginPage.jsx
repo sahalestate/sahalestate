@@ -19,7 +19,7 @@ function LoginPage() {
     setLoading(true);
     setError("");
     try {
-      const res = await fetch("http://localhost:5000/api/login", {
+      const res = await fetch("http://localhost:3000/api/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
@@ -28,10 +28,17 @@ function LoginPage() {
       if (!res.ok) {
         setError(data.error || "Login failed.");
       } else {
+        // Dispatch a custom login event after successful login
         localStorage.setItem("isLoggedIn", "true");
         localStorage.setItem("userName", data.name);
-        localStorage.setItem("userRole", data.role);
+        localStorage.setItem("userRole", data.role?.toLowerCase()); // Normalize role value before storing in localStorage
         localStorage.setItem("userId", data.userId); // Store userId in localStorage
+
+        localStorage.setItem("userEmail", data.email); // Store userEmail in localStorage
+
+        // Dispatch login event
+        window.dispatchEvent(new Event("login"));
+
         navigate("/dashboard");
       }
     } catch (err) {

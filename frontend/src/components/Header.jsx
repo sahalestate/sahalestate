@@ -40,9 +40,7 @@ function Header() {
           <li>
             <Link to="/listings">Listings</Link>
           </li>
-          <li>
-            <Link to="/">About</Link>
-          </li>
+
           {isLoggedIn ? (
             <>
               <Link to="/dashboard">
