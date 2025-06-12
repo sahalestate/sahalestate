@@ -2,6 +2,8 @@
   {
     "id": 1748514355206,
     "name": "Rabile Yassin",
+    "address": "123 Main St, Cityville",
+    "phone": "09424743074",
     "email": "rabile@mail.com",
     "password": "$2b$10$xlhqXcvhILurplGfgseZlOkbhWI5XmNlZUmEx.aNGGdEfznYq/sCm",
     "role": "admin"
@@ -9,8 +11,19 @@
   {
     "id": 1749015375228,
     "name": "Abdi Farah",
+    "address": "456 Elm St, Townsville",
+    "phone": "09480143385",
     "email": "abdi@mail.com",
-    "password": "$2b$10$g74.9V4bqlw/7Ml4P65e1eDybRDNy.Iq3l4ZOUEAfRa.0Z3kmk9t.",
+    "password": "$2b$10$.bv4UhS8pKIZATHybXaek.afU3p/B7ysBVTwItZGbwo8amP1SY9wS",
+    "role": "user"
+  },
+  {
+    "id": 1749762111107,
+    "name": "Fartun Shibli",
+    "email": "fartun@mail.com",
+    "password": "$2b$10$YrdmQMiYo6sWI.NaTK369e67jr0rI1XQ/pkSHeuh8oQ6izUEeQDsy",
+    "address": "London",
+    "phone": "09545484462",
     "role": "user"
   }
 ]

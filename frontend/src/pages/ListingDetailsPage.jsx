@@ -1,22 +1,83 @@
-import { useState } from "react";
-import "../styles/ListingDetailsPage.css";
-
-const images = [
-  "/images/home1.jpg",
-  "/images/home2.jpg",
-  "/images/home3.jpg",
-  "/images/home4.jpg",
-];
+import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import "../styles/index.css";
+import "../styles/ListingDetailsPage.css"; // Specific styles for ListingDetailsPage
 
 function ListingDetailsPage() {
-  const [mainImage, setMainImage] = useState(images[0]);
+  const { id } = useParams(); // Extract listing ID from URL
+  const [images, setImages] = useState([]);
+  const [mainImage, setMainImage] = useState(null);
+  const [listingDetails, setListingDetails] = useState(null); // State to store listing details
+  const [userDetails, setUserDetails] = useState(null); // State to store user details
+
+  useEffect(() => {
+    async function fetchImages() {
+      if (!id) return; // Wait until a valid listing ID is available
+      try {
+        const response = await fetch(
+          `http://localhost:3000/api/listings/${id}/images` // Use dynamic listing ID from URL
+        );
+        if (!response.ok) throw new Error("Failed to fetch images");
+        const data = await response.json();
+        const fullImageUrls = data.map((filename) => `/images/${filename}`); // Construct full image URLs
+        setImages(fullImageUrls);
+        setMainImage(fullImageUrls[0]); // Set the first image as the main image
+      } catch (error) {
+        console.error("Error fetching images:", error);
+      }
+    }
+
+    async function fetchListingDetails() {
+      if (!id) return; // Wait until a valid listing ID is available
+      try {
+        const response = await fetch(
+          `http://localhost:3000/api/listings/${id}` // Fetch listing details by ID
+        );
+        if (!response.ok) throw new Error("Failed to fetch listing details");
+        const data = await response.json();
+        setListingDetails(data); // Set listing details
+      } catch (error) {
+        console.error("Error fetching listing details:", error);
+      }
+    }
+
+    fetchImages();
+    fetchListingDetails();
+  }, [id]);
+
+  useEffect(() => {
+    async function fetchUserDetails(userId) {
+      if (!userId) return; // Wait until a valid userId is available
+      try {
+        const response = await fetch(
+          `http://localhost:3000/api/users/${userId}` // Fetch user details by userId
+        );
+        if (!response.ok) throw new Error("Failed to fetch user details");
+        const data = await response.json();
+        setUserDetails(data); // Set user details
+      } catch (error) {
+        console.error("Error fetching user details:", error);
+      }
+    }
+
+    if (listingDetails?.userId) {
+      fetchUserDetails(listingDetails.userId); // Fetch user details when listingDetails is available
+    }
+  }, [id, listingDetails]);
+
   return (
     <>
       <section className="listing-details">
         <div className="container">
           <div className="details-grid">
             <div className="property-images">
-              <img src={mainImage} alt="Property Main" className="main-image" />
+              {mainImage && (
+                <img
+                  src={mainImage}
+                  alt="Property Main"
+                  className="main-image"
+                />
+              )}
               <div className="thumbnails">
                 {images.map((img, idx) => (
                   <img
@@ -41,24 +102,42 @@ function ListingDetailsPage() {
               </div>
             </div>
             <div className="property-info-box">
-              <h2 className="property-title">Modern Family Home</h2>
-              <p className="property-location">
-                📍 West Garden Street, Hargeisa
-              </p>
-              <p className="property-price">$250,000</p>
-              <ul className="property-features">
-                <li>🛏 4 Bedrooms</li>
-                <li>🛁 3 Bathrooms</li>
-                <li>🚗 2 Garage Spaces</li>
-                <li>📐 2,400 sq ft</li>
-              </ul>
-              <p className="property-description">
-                This modern family home offers spacious living with contemporary
-                finishes throughout. Located in a quiet neighborhood, it's
-                perfect for growing families or anyone looking for comfort and
-                convenience.
-              </p>
-              <button className="contact-agent">Contact Agent</button>
+              {listingDetails ? (
+                <>
+                  <h2 className="property-title">{listingDetails.title}</h2>
+                  <p className="property-location">
+                    📍 {listingDetails.location}
+                  </p>
+                  <p className="property-price">${listingDetails.price}</p>
+                  <ul className="property-features">
+                    <li>🛏 {listingDetails.beds} Bedrooms</li>
+                    <li>🛁 {listingDetails.baths} Bathrooms</li>
+                    <li>📐 {listingDetails.area || "N/A"} sq ft</li>
+                  </ul>
+                  <p className="property-description">
+                    {listingDetails.description}
+                  </p>
+                  {userDetails && (
+                    <section className="property-user-details">
+                      <h2 className="property-user-title">Agent Details</h2>
+                      <p className="property-user">
+                        Name: <strong>{userDetails.name}</strong>
+                      </p>
+                      <p className="property-user">
+                        Address: <strong>{userDetails.address}</strong>
+                      </p>
+                      <p className="property-user">
+                        Email: <strong>{userDetails.email}</strong>
+                      </p>
+                      <p className="property-user">
+                        Phone: <strong>{userDetails.phone}</strong>
+                      </p>
+                    </section>
+                  )}
+                </>
+              ) : (
+                <p>Loading listing details...</p>
+              )}
             </div>
           </div>
         </div>

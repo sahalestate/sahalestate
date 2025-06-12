@@ -1,6 +1,7 @@
 import Listings from "../components/Listings";
 import Hero from "../components/Hero";
 import "../styles/index.css";
+
 import { useState, useEffect } from "react";
 
 function HomePage() {

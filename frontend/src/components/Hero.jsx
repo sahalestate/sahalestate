@@ -1,4 +1,5 @@
-import "../styles/hero.css";
+import "../styles/index.css";
+import "../styles/hero.css"; // Specific styles for Hero
 import SearchForm from "./SearchForm";
 
 function Hero({

@@ -1,22 +1,37 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import "../styles/Header.css"; // Adjust the path as necessary
+import "../styles/index.css";
+import "../styles/header.css"; // Specific styles for Header
 
 function Header() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userName, setUserName] = useState("");
+  const [name, setName] = useState(""); // Renamed from fullName to name
   const navigate = useNavigate();
 
   useEffect(() => {
     setIsLoggedIn(localStorage.getItem("isLoggedIn") === "true");
-    setUserName(localStorage.getItem("userName") || "");
+    const storedName = localStorage.getItem("name") || "";
+    setName(storedName); // Updated to use name
+  }, []);
+
+  useEffect(() => {
+    const handleLogin = () => {
+      setIsLoggedIn(localStorage.getItem("isLoggedIn") === "true");
+      setName(localStorage.getItem("name") || ""); // Updated to use name
+    };
+
+    window.addEventListener("login", handleLogin);
+
+    return () => {
+      window.removeEventListener("login", handleLogin);
+    };
   }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("isLoggedIn");
-    localStorage.removeItem("userName");
+    localStorage.removeItem("name"); // Updated to remove name
     setIsLoggedIn(false);
-    setUserName("");
+    setName("");
     navigate("/");
   };
 
@@ -45,7 +60,7 @@ function Header() {
             <>
               <Link to="/dashboard">
                 <li>
-                  <span className="user-greeting"> {userName}</span>
+                  <span className="user-greeting"> {name}</span>
                 </li>
               </Link>
 

@@ -1,4 +1,6 @@
-import "../styles/footer.css";
+import "../styles/index.css";
+import "../styles/footer.css"; // Specific styles for Footer
+import { Link } from "react-router-dom";
 
 function Footer() {
   return (
@@ -9,18 +11,15 @@ function Footer() {
           <p>&copy; 2025 RealEstate. All rights reserved.</p>
         </div>
         <nav className="footer-links">
-          <a href="/" aria-label="Home">
+          <Link to="/" aria-label="Home">
             Home
-          </a>
-          <a href="/listings" aria-label="Listings">
+          </Link>
+          <Link to="/listings" aria-label="Listings">
             Listings
-          </a>
-          <a href="/about" aria-label="About">
-            About
-          </a>
-          <a href="/contact" aria-label="Contact">
+          </Link>
+          <Link to="/contact" aria-label="Contact">
             Contact
-          </a>
+          </Link>
         </nav>
         <div className="footer-contact">
           <p>

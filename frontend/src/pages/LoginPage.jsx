@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
-import "../styles/LoginPage.css";
+import "../styles/index.css";
+import "../styles/LoginPage.css"; // Specific styles for LoginPage
 
 function LoginPage() {
   const [form, setForm] = useState({ email: "", password: "" });
@@ -35,6 +36,8 @@ function LoginPage() {
         localStorage.setItem("userId", data.userId); // Store userId in localStorage
 
         localStorage.setItem("userEmail", data.email); // Store userEmail in localStorage
+        localStorage.setItem("fullName", data.fullName); // Store fullName in localStorage
+        localStorage.setItem("name", data.name); // Store name in localStorage
 
         // Dispatch login event
         window.dispatchEvent(new Event("login"));

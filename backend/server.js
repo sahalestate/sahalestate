@@ -45,9 +45,14 @@ app.get("/api/users", (req, res) => {
 // Add user registration endpoint
 app.post("/api/users", async (req, res) => {
   const usersPath = path.join(__dirname, "user.json");
-  const { username, email, password } = req.body;
-  if (!username || !email || !password) {
+  const { fullName, email, password, address, phone } = req.body;
+  if (!fullName || !email || !password || !address || !phone) {
     return res.status(400).json({ error: "All fields are required." });
+  }
+  if (!/^\d{11}$/.test(phone)) {
+    return res
+      .status(400)
+      .json({ error: "Phone number must be exactly 11 digits." });
   }
   fs.readFile(usersPath, "utf8", async (err, data) => {
     if (err) return res.status(500).json({ error: "Failed to read user data" });
@@ -58,9 +63,11 @@ app.post("/api/users", async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = {
       id: Date.now(),
-      name: username,
+      fullName,
       email,
       password: hashedPassword,
+      address,
+      phone,
       role: "user",
     };
     users.push(newUser);
@@ -104,7 +111,13 @@ app.post("/api/login", (req, res) => {
 app.post("/api/listings", (req, res) => {
   const userId = req.body.userId; // Assume userId is included in the request body
   const listingsPath = path.join(__dirname, "listings.json");
-  const newListing = { ...req.body, id: Date.now(), userId }; // Add userId to the new listing
+  const newListing = {
+    ...req.body,
+    id: Date.now(),
+    userId,
+    images: req.body.images || [],
+  }; // Ensure images is always an array
+
   fs.readFile(listingsPath, "utf8", (err, data) => {
     if (err) {
       return res.status(500).json({ error: "Failed to read listings data" });
@@ -158,6 +171,48 @@ app.delete("/api/listings/:id", (req, res) => {
   });
 });
 
+// Serve images for a specific listing
+app.get("/api/listings/:id/images", (req, res) => {
+  const listingId = parseInt(req.params.id);
+  const listingsPath = path.join(__dirname, "listings.json");
+
+  fs.readFile(listingsPath, "utf8", (err, data) => {
+    if (err) {
+      return res.status(500).json({ error: "Failed to read listings data" });
+    }
+
+    const listings = JSON.parse(data);
+    const listing = listings.find((l) => l.id === listingId);
+
+    if (!listing) {
+      return res.status(404).json({ error: "Listing not found" });
+    }
+
+    res.status(200).json(listing.images || []);
+  });
+});
+
+// Serve details for a specific listing
+app.get("/api/listings/:id", (req, res) => {
+  const listingId = parseInt(req.params.id);
+  const listingsPath = path.join(__dirname, "listings.json");
+
+  fs.readFile(listingsPath, "utf8", (err, data) => {
+    if (err) {
+      return res.status(500).json({ error: "Failed to read listings data" });
+    }
+
+    const listings = JSON.parse(data);
+    const listing = listings.find((l) => l.id === listingId);
+
+    if (!listing) {
+      return res.status(404).json({ error: "Listing not found" });
+    }
+
+    res.json(listing);
+  });
+});
+
 // --- USERS CRUD ENDPOINTS ---
 app.put("/api/users/:id", async (req, res) => {
   const usersPath = path.join(__dirname, "user.json");
@@ -192,6 +247,27 @@ app.delete("/api/users/:id", (req, res) => {
       if (err) return res.status(500).json({ error: "Failed to delete user." });
       res.json(deleted);
     });
+  });
+});
+
+// Serve user data by userId
+app.get("/api/users/:userId", (req, res) => {
+  const usersPath = path.join(__dirname, "user.json");
+  const { userId } = req.params;
+
+  fs.readFile(usersPath, "utf8", (err, data) => {
+    if (err) {
+      return res.status(500).json({ error: "Failed to read user data" });
+    }
+
+    const users = JSON.parse(data);
+    const user = users.find((u) => u.id.toString() === userId);
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    res.json(user);
   });
 });
 

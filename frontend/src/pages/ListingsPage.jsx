@@ -2,9 +2,9 @@ import Listings from "../components/Listings";
 import Hero from "../components/Hero";
 import Pagination from "../components/Pagination";
 import { useState, useEffect } from "react";
-// import "../styles/Pagination.css";
 import "../styles/index.css";
-import "../styles/ListingsPage.css";
+import "../styles/ListingsPage.css"; // Specific styles for ListingsPage
+import "../styles/Pagination.css"; // Specific styles for Pagination
 
 function ListingsPage() {
   const [filteredListings, setFilteredListings] = useState([]);

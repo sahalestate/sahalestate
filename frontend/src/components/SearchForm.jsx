@@ -1,5 +1,6 @@
 import { useState } from "react";
-import "../styles/SearchForm.css";
+import "../styles/index.css";
+import "../styles/SearchForm.css"; // Specific styles for SearchForm
 
 function SearchForm({ onSearch }) {
   const [query, setQuery] = useState("");

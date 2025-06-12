@@ -1,5 +1,7 @@
 import SearchForm from "../components/SearchForm";
-import "../styles/DashboardPage.css";
+import "../styles/index.css";
+import "../styles/DashboardPage.css"; // Specific styles for DashboardPage
+
 import { useState, useEffect } from "react";
 
 function DashboardPage() {
@@ -11,10 +13,11 @@ function DashboardPage() {
     title: "",
     location: "",
     price: "",
-    image: "",
+    images: [],
     beds: "",
     baths: "",
     area: "",
+    description: "", // Added description field
   });
   // User CRUD state
   const [users, setUsers] = useState([]);
@@ -29,6 +32,8 @@ function DashboardPage() {
   const [listingConfirmationMessage, setListingConfirmationMessage] =
     useState("");
   const [userConfirmationMessage, setUserConfirmationMessage] = useState("");
+  const [deleteConfirmationMessage, setDeleteConfirmationMessage] =
+    useState("");
 
   // Check if the user is an admin
   const [isAdmin, setIsAdmin] = useState(false);
@@ -108,7 +113,16 @@ function DashboardPage() {
 
   // Listings CRUD handlers
   const handleListingChange = (e) => {
-    setListingForm({ ...listingForm, [e.target.name]: e.target.value });
+    const { name, value, files } = e.target;
+    if (name === "images") {
+      // Handle multiple image files
+      setListingForm({
+        ...listingForm,
+        images: Array.from(files).map((file) => file.name), // Store file names for simplicity
+      });
+    } else {
+      setListingForm({ ...listingForm, [name]: value });
+    }
   };
   const handleAddListing = async (e) => {
     e.preventDefault();
@@ -119,7 +133,15 @@ function DashboardPage() {
       );
       return;
     }
-    if (!listingForm.title || !listingForm.location || !listingForm.price) {
+    if (
+      !listingForm.title ||
+      !listingForm.location ||
+      !listingForm.price ||
+      !listingForm.images.length ||
+      !listingForm.beds ||
+      !listingForm.baths ||
+      !listingForm.description // Ensure description is provided
+    ) {
       setListingConfirmationMessage("All fields are required.");
       return;
     }
@@ -131,7 +153,7 @@ function DashboardPage() {
       });
       if (!response.ok) throw new Error("Failed to add listing");
       const newListing = await response.json();
-      setListings((prevListings) => [...prevListings, newListing.listing]);
+      setListings((prevListings) => [...prevListings, newListing.listing]); // Update state immediately
       setFilteredListings((prevListings) => [
         ...prevListings,
         newListing.listing,
@@ -140,10 +162,11 @@ function DashboardPage() {
         title: "",
         location: "",
         price: "",
-        image: "",
+        images: [],
         beds: "",
         baths: "",
         area: "",
+        description: "", // Reset description field
       });
       setListingConfirmationMessage("Listing added successfully!");
     } catch (error) {
@@ -156,10 +179,11 @@ function DashboardPage() {
       title: listing.title,
       location: listing.location,
       price: listing.price,
-      image: listing.image,
+      images: listing.images,
       beds: listing.beds,
       baths: listing.baths,
       area: listing.area,
+      description: listing.description, // Populate description for editing
     });
   };
   const handleUpdateListing = async (e) => {
@@ -180,28 +204,43 @@ function DashboardPage() {
         title: "",
         location: "",
         price: "",
-        image: "",
+        images: [],
         beds: "",
         baths: "",
         area: "",
+        description: "", // Reset description field
       });
       setListingConfirmationMessage("Listing updated successfully!");
     } catch (err) {
       setListingConfirmationMessage("Error updating listing: " + err.message);
     }
   };
-  const handleDeleteListing = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this listing?"))
-      return;
+  const [deletePendingId, setDeletePendingId] = useState(null); // Track which listing is pending deletion
+  const handleDeleteListing = (id) => {
+    setDeletePendingId(id); // Set the ID of the listing to delete
+  };
+
+  const handleConfirmDeleteListing = async () => {
+    if (!deletePendingId) return;
     try {
-      const res = await fetch(`http://localhost:3000/api/listings/${id}`, {
-        method: "DELETE",
-      });
+      const res = await fetch(
+        `http://localhost:3000/api/listings/${deletePendingId}`,
+        {
+          method: "DELETE",
+        }
+      );
       if (!res.ok) throw new Error("Failed to delete listing");
       setListings(await res.json());
+      setDeleteConfirmationMessage("Listing deleted successfully!");
     } catch (err) {
-      alert("Error deleting listing: " + err.message);
+      setDeleteConfirmationMessage("Error deleting listing: " + err.message);
+    } finally {
+      setDeletePendingId(null); // Reset the pending ID
     }
+  };
+
+  const handleCancelDeleteListing = () => {
+    setDeletePendingId(null); // Cancel the delete action
   };
 
   // User CRUD handlers
@@ -265,7 +304,8 @@ function DashboardPage() {
     }
   };
   const handleDeleteUser = async (userId) => {
-    if (!window.confirm("Are you sure you want to delete this user?")) return;
+    setDeleteConfirmationMessage("Are you sure you want to delete this user?");
+    if (deleteConfirmationMessage !== "confirmed") return;
     try {
       const response = await fetch(
         `http://localhost:3000/api/users/${userId}`,
@@ -275,8 +315,9 @@ function DashboardPage() {
       );
       if (!response.ok) throw new Error("Failed to delete user");
       setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId));
+      setDeleteConfirmationMessage("User deleted successfully!");
     } catch (error) {
-      alert("Error deleting user: " + error.message);
+      setDeleteConfirmationMessage("Error deleting user: " + error.message);
     }
   };
 
@@ -295,18 +336,6 @@ function DashboardPage() {
   return (
     <>
       <div className="dashboard-container">
-        {/* Display confirmation message at the top */}
-        {listingConfirmationMessage && (
-          <div className="confirmation-message" style={{ marginTop: "8px" }}>
-            {listingConfirmationMessage}
-          </div>
-        )}
-        {userConfirmationMessage && (
-          <div className="confirmation-message" style={{ marginTop: "8px" }}>
-            {userConfirmationMessage}
-          </div>
-        )}
-
         {/* Navigation links */}
         <div className="dashboard-nav">
           <button
@@ -359,11 +388,12 @@ function DashboardPage() {
                   className="dashboard-input"
                 />
                 <input
-                  name="image"
-                  value={listingForm.image}
+                  name="images"
+                  type="file"
                   onChange={handleListingChange}
-                  placeholder="Image URL"
+                  placeholder="Images"
                   className="dashboard-input"
+                  multiple
                 />
                 <input
                   name="beds"
@@ -388,6 +418,14 @@ function DashboardPage() {
                   placeholder="Area (e.g. 1200 sq ft)"
                   className="dashboard-input"
                 />
+                <textarea
+                  name="description"
+                  value={listingForm.description || ""}
+                  onChange={handleListingChange}
+                  placeholder="Enter description"
+                  required
+                  className="dashboard-textarea description-field"
+                ></textarea>
                 <button type="submit" className="dashboard-link">
                   {editingListing ? "Update" : "Add"}
                 </button>
@@ -401,10 +439,11 @@ function DashboardPage() {
                         title: "",
                         location: "",
                         price: "",
-                        image: "",
+                        images: [],
                         beds: "",
                         baths: "",
                         area: "",
+                        description: "", // Reset description field
                       });
                     }}
                   >
@@ -412,30 +451,41 @@ function DashboardPage() {
                   </button>
                 )}
               </form>
-              {/* ###### */}
+
+              {/* confirmation message */}
               {listingConfirmationMessage && (
-                <div
-                  className="confirmation-message"
-                  style={{ marginTop: "8px" }}
-                >
+                <div className="confirmation-message">
                   {listingConfirmationMessage}
                 </div>
               )}
 
-              {/* #### */}
+              {userConfirmationMessage && (
+                <div className="confirmation-message">
+                  {userConfirmationMessage}
+                </div>
+              )}
+              {deletePendingId && (
+                <div className="delete-confirmation">
+                  <p>Are you sure you want to delete this listing?</p>
+                  <button onClick={handleConfirmDeleteListing}>Yes</button>
+                  <button onClick={handleCancelDeleteListing}>No</button>
+                </div>
+              )}
 
               <ul>
                 {filteredListings.map((listing) => (
-                  <li key={listing.id}>
-                    <span style={{ flex: 2, fontWeight: 600 }}>
-                      {listing.title}
+                  <li key={listing.id} className="listing-item">
+                    <span className="id">{listing.id}</span>
+
+                    <span className="title">{listing.title}</span>
+                    <span className="location">{listing.location}</span>
+                    {/* <span className="price">{listing.price}</span>
+                    <span className="images">
+                      {(listing.images || []).join(", ")}
                     </span>
-                    <span style={{ flex: 2 }}>{listing.location}</span>
-                    <span style={{ flex: 1 }}>{listing.price}</span>
-                    <span style={{ flex: 2 }}>{listing.image}</span>
-                    <span style={{ flex: 1 }}>{listing.beds}</span>
-                    <span style={{ flex: 1 }}>{listing.baths}</span>
-                    <span style={{ flex: 1 }}>{listing.area}</span>
+                    <span className="beds">{listing.beds}</span>
+                    <span className="baths">{listing.baths}</span>
+                    <span className="area">{listing.area}</span> */}
                     <button
                       className="dashboard-link"
                       onClick={() => handleEditListing(listing)}
@@ -459,6 +509,7 @@ function DashboardPage() {
               <div className="dashboard-section-title">Users</div>
               <form
                 onSubmit={editingUser ? handleUpdateUser : handleAddUser}
+                className="user-form"
                 style={{ marginBottom: 16 }}
               >
                 <input
