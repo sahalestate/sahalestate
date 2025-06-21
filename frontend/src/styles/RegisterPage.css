@@ -1,14 +1,11 @@
 /* Registration Page Styles */
 .register-container {
-  max-width: 430px;
+  max-width: 50rem;
   margin: 4.5rem auto;
-  padding: 2.7rem 2.2rem;
+  padding: 3rem;
   background: var(--primary-card);
   border-radius: 1.3rem;
   box-shadow: 0 4px 24px var(--gray-200);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 }
 
 .register-container h2 {

@@ -2,100 +2,16 @@
   {
     "title": "Modern House",
     "location": "Jijiga",
-    "price": "1457",
-    "images": [
-      "home4.jpg",
-      "home5.jpg",
-      "house.jpg"
-    ],
-    "beds": "3",
-    "baths": "1",
-    "area": "1245",
-    "userId": "1748514355206",
-    "id": 1749535029214,
-    "description": "A modern house with spacious rooms and contemporary design."
-  },
-  {
-    "title": "Modern House 2",
-    "location": "Mogadishu",
-    "price": "1457",
-    "images": [
-      "home4.jpg",
-      "home5.jpg",
-      "home6.jpg",
-      "home7.jpg",
-      "home8.jpg"
-    ],
-    "beds": "2",
-    "baths": "1",
-    "area": "",
-    "userId": "1749015375228",
-    "id": 1749541093747,
-    "description": "A cozy house located in the heart of Mogadishu, perfect for small families."
-  },
-  {
-    "title": "Modern House Advanced one",
-    "location": "Jijiga",
     "price": "1245",
     "images": [
-      "home1.jpg",
-      "home2.jpg",
-      "home3.jpg"
+      "home7.jpg",
+      "home8.jpg"
     ],
     "beds": "5",
     "baths": "2",
     "area": "1245",
+    "description": "the best house",
     "userId": "1748514355206",
-    "id": 1749545321200,
-    "description": "An advanced modern house with luxurious amenities and ample space."
-  },
-  {
-    "title": "Luxury Villa",
-    "location": "london",
-    "price": "1234",
-    "images": [
-      "home2.jpg"
-    ],
-    "beds": "2",
-    "baths": "1",
-    "area": "",
-    "description": "2,450 sq ft contemporary home with southern exposure. Features 3 bedrooms, 2.5 baths, and 9-foot ceilings throughout. 2022 kitchen renovation includes Wolf 6-burner range and 48-inch Sub-Zero refrigerator. 600 sq ft backyard with 4 mature citrus trees. 0.3 miles to Muni station",
-    "userId": "1748514355206",
-    "id": 1749547485155
-  },
-  {
-    "title": "Modern House Advanced two",
-    "location": "Mogadishu",
-    "price": "2300",
-    "images": [
-      "home4.jpg",
-      "home5.jpg",
-      "home6.jpg",
-      "home7.jpg",
-      "home8.jpg"
-    ],
-    "beds": "3",
-    "baths": "1",
-    "area": "1456",
-    "description": "the best house in mogadishu",
-    "userId": "1748514355206",
-    "id": 1749590744758
-  },
-  {
-    "title": "The best house",
-    "location": "Jijiga",
-    "price": "1245",
-    "images": [
-      "home4.jpg",
-      "home5.jpg",
-      "home6.jpg",
-      "home7.jpg"
-    ],
-    "beds": "5",
-    "baths": "3",
-    "area": "1245",
-    "description": "Waa guri casri ah oo wax walba kuugu diyaarsan yihiin",
-    "userId": "1749762111107",
-    "id": 1749763085992
+    "id": 1749813464313
   }
 ]

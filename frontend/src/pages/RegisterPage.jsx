@@ -4,7 +4,7 @@ import "../styles/RegisterPage.css"; // Specific styles for RegisterPage
 
 function RegisterPage() {
   const [form, setForm] = useState({
-    fullName: "",
+    name: "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -30,7 +30,7 @@ function RegisterPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (
-      !form.fullName ||
+      !form.name ||
       !form.email ||
       !form.password ||
       !form.confirmPassword ||
@@ -55,7 +55,7 @@ function RegisterPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          fullName: form.fullName,
+          name: form.name,
           email: form.email,
           password: form.password,
           address: form.address,
@@ -68,15 +68,15 @@ function RegisterPage() {
       } else {
         setSuccess("Registration successful! You can now log in.");
         setForm({
-          fullName: "",
+          name: "",
           email: "",
           password: "",
           confirmPassword: "",
           address: "",
           phone: "",
         });
-        if (data.fullName) {
-          localStorage.setItem("fullName", data.fullName); // Store fullName in localStorage
+        if (data.name) {
+          localStorage.setItem("name", data.name); // Store fullName in localStorage
         }
         localStorage.setItem("name", data.name); // Store name in localStorage
         // Optionally, refresh users list
@@ -95,12 +95,12 @@ function RegisterPage() {
         <h2>Register</h2>
         <form onSubmit={handleSubmit} autoComplete="off">
           <div>
-            <label htmlFor="fullName">Full Name</label>
+            <label htmlFor="name">Full Name</label>
             <input
               type="text"
-              id="fullName"
-              name="fullName"
-              value={form.fullName}
+              id="name"
+              name="name"
+              value={form.name}
               onChange={handleChange}
               placeholder="Enter your full name"
               required

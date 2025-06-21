@@ -24,9 +24,8 @@ function DashboardPage() {
   const [editingUser, setEditingUser] = useState(null);
   const [userForm, setUserForm] = useState({
     name: "",
-    email: "",
-    password: "",
     role: "",
+    address: "",
   });
   const [filteredListings, setFilteredListings] = useState([]);
   const [listingConfirmationMessage, setListingConfirmationMessage] =
@@ -37,9 +36,12 @@ function DashboardPage() {
 
   // Check if the user is an admin
   const [isAdmin, setIsAdmin] = useState(false);
+  const [waitingApproval, setWaitingApproval] = useState(false);
+
   useEffect(() => {
     const userRole = localStorage.getItem("userRole"); // Assume userRole is stored in localStorage
     setIsAdmin(userRole === "admin");
+    setWaitingApproval(userRole === "user"); // Track 'user' role
   }, []);
 
   // Fetch listings and users from backend
@@ -276,10 +278,9 @@ function DashboardPage() {
   const handleEditUser = (user) => {
     setEditingUser(user.id);
     setUserForm({
-      name: user.name,
-      email: user.email,
-      password: "", // Password should not be pre-filled for security reasons
-      role: user.role,
+      name: user.name || "", // Fallback to empty string if undefined
+      role: user.role || "", // Fallback to empty string if undefined
+      address: user.address || "", // Fallback to empty string if undefined
     });
   };
   const handleUpdateUser = async (e) => {
@@ -290,35 +291,59 @@ function DashboardPage() {
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(userForm),
+          body: JSON.stringify({
+            name: userForm.name,
+            role: userForm.role,
+            address: userForm.address,
+          }),
         }
       );
       if (!response.ok) throw new Error("Failed to update user");
-      const updatedUsers = await response.json();
-      setUsers(Array.isArray(updatedUsers) ? updatedUsers : []);
+      const updatedUser = await response.json();
+      setUsers((prevUsers) =>
+        prevUsers.map((user) =>
+          user.id === updatedUser.id ? updatedUser : user
+        )
+      );
       setEditingUser(null);
-      setUserForm({ name: "", email: "", password: "", role: "" });
+      setUserForm({
+        name: "",
+        role: "",
+        address: "",
+      });
       setUserConfirmationMessage("User updated successfully!");
     } catch (error) {
       setUserConfirmationMessage("Error updating user: " + error.message);
     }
   };
-  const handleDeleteUser = async (userId) => {
-    setDeleteConfirmationMessage("Are you sure you want to delete this user?");
-    if (deleteConfirmationMessage !== "confirmed") return;
+  const [deletePendingUserId, setDeletePendingUserId] = useState(null);
+
+  const handleDeleteUser = (userId) => {
+    setDeletePendingUserId(userId); // Set the user ID for pending deletion
+  };
+
+  const confirmDeleteUser = async () => {
     try {
       const response = await fetch(
-        `http://localhost:3000/api/users/${userId}`,
+        `http://localhost:3000/api/users/${deletePendingUserId}`,
         {
           method: "DELETE",
         }
       );
       if (!response.ok) throw new Error("Failed to delete user");
-      setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId));
-      setDeleteConfirmationMessage("User deleted successfully!");
+      setUsers((prevUsers) =>
+        prevUsers.filter((user) => user.id !== deletePendingUserId)
+      );
+      setSuccessMessage("User deleted successfully!"); // Inline success message
     } catch (error) {
-      setDeleteConfirmationMessage("Error deleting user: " + error.message);
+      setErrorMessage("Error deleting user: " + error.message); // Inline error message
+    } finally {
+      setDeletePendingUserId(null); // Reset the pending user ID
     }
+  };
+
+  const cancelDeleteUser = () => {
+    setDeletePendingUserId(null); // Cancel the delete action
   };
 
   const handleSearch = (query) => {
@@ -335,265 +360,275 @@ function DashboardPage() {
   0;
   return (
     <>
-      <div className="dashboard-container">
-        {/* Navigation links */}
-        <div className="dashboard-nav">
-          <button
-            className={`dashboard-link${
-              activeTab === "listings" ? " active" : ""
-            }`}
-            onClick={() => setActiveTab("listings")}
-            type="button"
-          >
-            Listings
-          </button>
-          <button
-            className={`dashboard-link${activeTab === "user" ? " active" : ""}`}
-            onClick={() => setActiveTab("user")}
-            type="button"
-          >
-            User
-          </button>
+      {waitingApproval ? (
+        <div className="waiting-approval-message">
+          Waiting for approval. Please check back later or contact admin.
         </div>
-        <div className="dashboard-content">
-          {activeTab === "listings" && (
-            <section className="dashboard-section">
-              <div className="dashboard-section-title">Listings</div>
-              <SearchForm onSearch={handleSearch} />
-              <form
-                onSubmit={
-                  editingListing ? handleUpdateListing : handleAddListing
-                }
-              >
-                <input
-                  name="title"
-                  value={listingForm.title}
-                  onChange={handleListingChange}
-                  placeholder="Title"
-                  className="dashboard-input"
-                />
-                <input
-                  name="location"
-                  value={listingForm.location}
-                  onChange={handleListingChange}
-                  placeholder="Location"
-                  className="dashboard-input"
-                />
-                <input
-                  name="price"
-                  value={listingForm.price}
-                  onChange={handleListingChange}
-                  placeholder="Price"
-                  type="text"
-                  className="dashboard-input"
-                />
-                <input
-                  name="images"
-                  type="file"
-                  onChange={handleListingChange}
-                  placeholder="Images"
-                  className="dashboard-input"
-                  multiple
-                />
-                <input
-                  name="beds"
-                  value={listingForm.beds}
-                  onChange={handleListingChange}
-                  placeholder="Beds"
-                  type="number"
-                  className="dashboard-input"
-                />
-                <input
-                  name="baths"
-                  value={listingForm.baths}
-                  onChange={handleListingChange}
-                  placeholder="Baths"
-                  type="number"
-                  className="dashboard-input"
-                />
-                <input
-                  name="area"
-                  value={listingForm.area}
-                  onChange={handleListingChange}
-                  placeholder="Area (e.g. 1200 sq ft)"
-                  className="dashboard-input"
-                />
-                <textarea
-                  name="description"
-                  value={listingForm.description || ""}
-                  onChange={handleListingChange}
-                  placeholder="Enter description"
-                  required
-                  className="dashboard-textarea description-field"
-                ></textarea>
-                <button type="submit" className="dashboard-link">
-                  {editingListing ? "Update" : "Add"}
-                </button>
-                {editingListing && (
-                  <button
-                    type="button"
-                    className="dashboard-link cancel"
-                    onClick={() => {
-                      setEditingListing(null);
-                      setListingForm({
-                        title: "",
-                        location: "",
-                        price: "",
-                        images: [],
-                        beds: "",
-                        baths: "",
-                        area: "",
-                        description: "", // Reset description field
-                      });
-                    }}
-                  >
-                    Cancel
+      ) : (
+        <div className="dashboard-container">
+          {/* Navigation links */}
+          <div className="dashboard-nav">
+            <button
+              className={`dashboard-link${
+                activeTab === "listings" ? " active" : ""
+              }`}
+              onClick={() => setActiveTab("listings")}
+              type="button"
+            >
+              Listings
+            </button>
+            <button
+              className={`dashboard-link${
+                activeTab === "user" ? " active" : ""
+              }`}
+              onClick={() => setActiveTab("user")}
+              type="button"
+            >
+              User
+            </button>
+          </div>
+          <div className="dashboard-content">
+            {activeTab === "listings" && (
+              <section className="dashboard-section">
+                <div className="dashboard-section-title">Listings</div>
+                <SearchForm onSearch={handleSearch} />
+                <form
+                  onSubmit={
+                    editingListing ? handleUpdateListing : handleAddListing
+                  }
+                >
+                  <input
+                    name="title"
+                    value={listingForm.title}
+                    onChange={handleListingChange}
+                    placeholder="Title"
+                    className="dashboard-input"
+                  />
+                  <input
+                    name="location"
+                    value={listingForm.location}
+                    onChange={handleListingChange}
+                    placeholder="Location"
+                    className="dashboard-input"
+                  />
+                  <input
+                    name="price"
+                    value={listingForm.price}
+                    onChange={handleListingChange}
+                    placeholder="Price"
+                    type="text"
+                    className="dashboard-input"
+                  />
+                  <input
+                    name="images"
+                    type="file"
+                    onChange={handleListingChange}
+                    placeholder="Images"
+                    className="dashboard-input"
+                    multiple
+                  />
+                  <input
+                    name="beds"
+                    value={listingForm.beds}
+                    onChange={handleListingChange}
+                    placeholder="Beds"
+                    type="number"
+                    className="dashboard-input"
+                  />
+                  <input
+                    name="baths"
+                    value={listingForm.baths}
+                    onChange={handleListingChange}
+                    placeholder="Baths"
+                    type="number"
+                    className="dashboard-input"
+                  />
+                  <input
+                    name="area"
+                    value={listingForm.area}
+                    onChange={handleListingChange}
+                    placeholder="Area (e.g. 1200 sq ft)"
+                    className="dashboard-input"
+                  />
+                  <textarea
+                    name="description"
+                    value={listingForm.description || ""}
+                    onChange={handleListingChange}
+                    placeholder="Enter description"
+                    required
+                    className="dashboard-textarea description-field"
+                  ></textarea>
+                  <button type="submit" className="dashboard-link">
+                    {editingListing ? "Update" : "Add"}
                   </button>
-                )}
-              </form>
-
-              {/* confirmation message */}
-              {listingConfirmationMessage && (
-                <div className="confirmation-message">
-                  {listingConfirmationMessage}
-                </div>
-              )}
-
-              {userConfirmationMessage && (
-                <div className="confirmation-message">
-                  {userConfirmationMessage}
-                </div>
-              )}
-              {deletePendingId && (
-                <div className="delete-confirmation">
-                  <p>Are you sure you want to delete this listing?</p>
-                  <button onClick={handleConfirmDeleteListing}>Yes</button>
-                  <button onClick={handleCancelDeleteListing}>No</button>
-                </div>
-              )}
-
-              <ul>
-                {filteredListings.map((listing) => (
-                  <li key={listing.id} className="listing-item">
-                    <span className="id">{listing.id}</span>
-
-                    <span className="title">{listing.title}</span>
-                    <span className="location">{listing.location}</span>
-                    {/* <span className="price">{listing.price}</span>
-                    <span className="images">
-                      {(listing.images || []).join(", ")}
-                    </span>
-                    <span className="beds">{listing.beds}</span>
-                    <span className="baths">{listing.baths}</span>
-                    <span className="area">{listing.area}</span> */}
-                    <button
-                      className="dashboard-link"
-                      onClick={() => handleEditListing(listing)}
-                    >
-                      Edit
-                    </button>
+                  {editingListing && (
                     <button
                       type="button"
-                      className="dashboard-link delete"
-                      onClick={() => handleDeleteListing(listing.id)}
+                      className="dashboard-link cancel"
+                      onClick={() => {
+                        setEditingListing(null);
+                        setListingForm({
+                          title: "",
+                          location: "",
+                          price: "",
+                          images: [],
+                          beds: "",
+                          baths: "",
+                          area: "",
+                          description: "", // Reset description field
+                        });
+                      }}
                     >
-                      Delete
+                      Cancel
                     </button>
-                  </li>
-                ))}
-              </ul>
-            </section>
-          )}
-          {activeTab === "user" && isAdmin && (
-            <section className="dashboard-section">
-              <div className="dashboard-section-title">Users</div>
-              <form
-                onSubmit={editingUser ? handleUpdateUser : handleAddUser}
-                className="user-form"
-                style={{ marginBottom: 16 }}
-              >
-                <input
-                  name="name"
-                  value={userForm.name}
-                  onChange={handleUserChange}
-                  placeholder="Name"
-                  className="dashboard-input"
-                />
-                <input
-                  name="email"
-                  value={userForm.email}
-                  onChange={handleUserChange}
-                  placeholder="Email"
-                  className="dashboard-input"
-                />
-                <input
-                  name="password"
-                  value={userForm.password}
-                  onChange={handleUserChange}
-                  placeholder="Password"
-                  type="password"
-                  className="dashboard-input"
-                />
-                <select
-                  name="role"
-                  value={userForm.role}
-                  onChange={handleUserChange}
-                  className="dashboard-input"
-                >
-                  <option value="">Select Role</option>
-                  <option value="admin">Admin</option>
-                  <option value="user">User</option>
-                </select>
-                <button type="submit" className="dashboard-link">
-                  {editingUser ? "Update" : "Add"} User
-                </button>
-                {editingUser && (
-                  <button
-                    type="button"
-                    className="dashboard-link cancel"
-                    onClick={() => {
-                      setEditingUser(null);
-                      setUserForm({
-                        name: "",
-                        email: "",
-                        password: "",
-                        role: "",
-                      });
-                    }}
-                  >
-                    Cancel
-                  </button>
+                  )}
+                </form>
+
+                {/* confirmation message */}
+                {listingConfirmationMessage && (
+                  <div className="confirmation-message">
+                    {listingConfirmationMessage}
+                  </div>
                 )}
-              </form>
-              <ul>
-                {users.map((user) => (
-                  <li key={user.id}>
-                    <span>{user.name}</span>
-                    <span>{user.email}</span>
+
+                {userConfirmationMessage && (
+                  <div className="confirmation-message">
+                    {userConfirmationMessage}
+                  </div>
+                )}
+                {deletePendingId && (
+                  <div className="delete-confirmation">
+                    <p>Are you sure you want to delete this listing?</p>
+                    <button onClick={handleConfirmDeleteListing}>Yes</button>
+                    <button onClick={handleCancelDeleteListing}>No</button>
+                  </div>
+                )}
+
+                <ul>
+                  {filteredListings.map((listing) => (
+                    <li key={listing.id} className="listing-item">
+                      <span className="id">{listing.id}</span>
+
+                      <span className="title">{listing.title}</span>
+                      <span className="location">{listing.location}</span>
+                      {/* <span className="price">{listing.price}</span>
+                      <span className="images">
+                        {(listing.images || []).join(", ")}
+                      </span>
+                      <span className="beds">{listing.beds}</span>
+                      <span className="baths">{listing.baths}</span>
+                      <span className="area">{listing.area}</span> */}
+                      <button
+                        className="dashboard-link"
+                        onClick={() => handleEditListing(listing)}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        type="button"
+                        className="dashboard-link delete"
+                        onClick={() => handleDeleteListing(listing.id)}
+                      >
+                        Delete
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )}
+            {activeTab === "user" && isAdmin && (
+              <section className="dashboard-section">
+                <div className="dashboard-section-title">Users</div>
+                <form
+                  onSubmit={editingUser ? handleUpdateUser : handleAddUser}
+                  className="user-form"
+                  style={{ marginBottom: 16 }}
+                >
+                  <input
+                    name="name"
+                    value={userForm.name}
+                    onChange={handleUserChange}
+                    placeholder="Name"
+                    className="dashboard-input"
+                  />
+                  <select
+                    name="role"
+                    value={userForm.role}
+                    onChange={handleUserChange}
+                    className="dashboard-input"
+                  >
+                    <option value="">Select Role</option>
+                    <option value="admin">Admin</option>
+                    <option value="agent">Agent</option>
+                    <option value="user">User</option>
+                  </select>
+                  <input
+                    name="address"
+                    value={userForm.address}
+                    onChange={handleUserChange}
+                    placeholder="Address"
+                    className="dashboard-input"
+                  />
+                  <button type="submit" className="dashboard-link">
+                    {editingUser ? "Update" : "Add"} User
+                  </button>
+                  {editingUser && (
                     <button
-                      className="dashboard-link"
-                      onClick={() => handleEditUser(user)}
+                      type="button"
+                      className="dashboard-link cancel"
+                      onClick={() => {
+                        setEditingUser(null);
+                        setUserForm({
+                          name: "",
+                          email: "",
+                          password: "",
+                          role: "",
+                          address: "",
+                          phone: "",
+                        });
+                      }}
                     >
-                      Edit
+                      Cancel
                     </button>
-                    <button
-                      className="dashboard-link delete"
-                      onClick={() => handleDeleteUser(user.id)}
-                    >
-                      Delete
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </section>
-          )}
-          {!isAdmin && activeTab === "user" && (
-            <div className="dashboard-section-title">
-              Access Denied: Admins Only
-            </div>
-          )}
+                  )}
+                </form>
+                {deletePendingUserId && (
+                  <div className="confirmation-message">
+                    <p>Are you sure you want to delete this user?</p>
+                    <button onClick={confirmDeleteUser}>Yes</button>
+                    <button onClick={cancelDeleteUser}>No</button>
+                  </div>
+                )}
+                <ul>
+                  {users.map((user) => (
+                    <li key={user.id}>
+                      <span>{user.name}</span>
+                      <span>{user.email}</span>
+                      <button
+                        className="dashboard-link"
+                        onClick={() => handleEditUser(user)}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        className="dashboard-link delete"
+                        onClick={() => handleDeleteUser(user.id)}
+                      >
+                        Delete
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )}
+            {!isAdmin && activeTab === "user" && (
+              <div className="dashboard-section-title">
+                Access Denied: Admins Only
+              </div>
+            )}
+          </div>
         </div>
-      </div>
+      )}
     </>
   );
 }

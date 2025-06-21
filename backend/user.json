@@ -9,21 +9,21 @@
     "role": "admin"
   },
   {
-    "id": 1749015375228,
-    "name": "Abdi Farah",
-    "address": "456 Elm St, Townsville",
-    "phone": "09480143385",
-    "email": "abdi@mail.com",
-    "password": "$2b$10$.bv4UhS8pKIZATHybXaek.afU3p/B7ysBVTwItZGbwo8amP1SY9wS",
+    "id": 1749813395502,
+    "name": "Ahmed Abdi",
+    "email": "ahmed@mail.com",
+    "password": "$2b$10$KUmLi9c8XRASPY8.ebUAaemZ10ndmwxllxtJ9snTuqsmnwDFAVt4O",
+    "address": "Jijiga",
+    "phone": "00123456789",
     "role": "user"
   },
   {
-    "id": 1749762111107,
+    "id": 1749813976813,
     "name": "Fartun Shibli",
     "email": "fartun@mail.com",
-    "password": "$2b$10$YrdmQMiYo6sWI.NaTK369e67jr0rI1XQ/pkSHeuh8oQ6izUEeQDsy",
+    "password": "$2b$10$Xhg8PNmMskHoVuZiBpd9hOFxphUaO67sCcXtKe2rDxkQec4oa/yrG",
     "address": "London",
-    "phone": "09545484462",
-    "role": "user"
+    "phone": "09785124569",
+    "role": "agent"
   }
 ]

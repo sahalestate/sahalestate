@@ -45,15 +45,15 @@ app.get("/api/users", (req, res) => {
 // Add user registration endpoint
 app.post("/api/users", async (req, res) => {
   const usersPath = path.join(__dirname, "user.json");
-  const { fullName, email, password, address, phone } = req.body;
-  if (!fullName || !email || !password || !address || !phone) {
+  const { name, email, password, address, phone } = req.body; // Added 'address' and 'phone'
+  if (!name || !email || !password || !address || !phone) {
     return res.status(400).json({ error: "All fields are required." });
   }
-  if (!/^\d{11}$/.test(phone)) {
-    return res
-      .status(400)
-      .json({ error: "Phone number must be exactly 11 digits." });
-  }
+  // if (!/^\\d{11}$/.test(phone)) {
+  //   return res
+  //     .status(400)
+  //     .json({ error: "Phone number must be exactly 11 digits." });
+  // }
   fs.readFile(usersPath, "utf8", async (err, data) => {
     if (err) return res.status(500).json({ error: "Failed to read user data" });
     let users = JSON.parse(data);
@@ -63,11 +63,11 @@ app.post("/api/users", async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = {
       id: Date.now(),
-      fullName,
+      name,
       email,
       password: hashedPassword,
-      address,
-      phone,
+      address, // Added 'address'
+      phone, // Added 'phone'
       role: "user",
     };
     users.push(newUser);
@@ -250,7 +250,6 @@ app.delete("/api/users/:id", (req, res) => {
   });
 });
 
-// Serve user data by userId
 app.get("/api/users/:userId", (req, res) => {
   const usersPath = path.join(__dirname, "user.json");
   const { userId } = req.params;
