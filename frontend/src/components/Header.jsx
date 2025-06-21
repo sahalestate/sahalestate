@@ -65,10 +65,7 @@ function Header() {
               </Link>
 
               <li>
-                <button
-                  className="dashboard-btn small secondary"
-                  onClick={handleLogout}
-                >
+                <button className="dashboard-btn" onClick={handleLogout}>
                   Logout
                 </button>
               </li>

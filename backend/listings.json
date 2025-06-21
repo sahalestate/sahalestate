@@ -13,5 +13,54 @@
     "description": "the best house",
     "userId": "1748514355206",
     "id": 1749813464313
+  },
+  {
+    "title": "Modern House Advanced two",
+    "location": "london",
+    "price": "1234",
+    "images": [
+      "home4.jpg",
+      "home5.jpg",
+      "home6.jpg",
+      "home7.jpg",
+      "home8.jpg"
+    ],
+    "beds": "5",
+    "baths": "2",
+    "area": "1245",
+    "description": "Charming, renovated Victorian with a modern twist, featuring 3 bedrooms, 2 bathrooms, a spacious kitchen with stainless steel appliances, and a private garden",
+    "userId": "1749813976813",
+    "id": 1749911978688
+  },
+  {
+    "title": "Luxury Villa",
+    "location": "Mogadishu",
+    "price": "1234",
+    "images": [
+      "home1.jpg",
+      "home2.jpg",
+      "home3.jpg"
+    ],
+    "beds": "2",
+    "baths": "1",
+    "area": "1245",
+    "description": "The best description of a house to rent",
+    "userId": "1748514355206",
+    "id": 1749923250682
+  },
+  {
+    "title": "Modern House Advanced two",
+    "location": "Mogadishu",
+    "price": "1457",
+    "images": [
+      "home8.jpg",
+      "home8.jpg"
+    ],
+    "beds": "2",
+    "baths": "1",
+    "area": "1245",
+    "description": "No description avaliable",
+    "userId": "1750143071561",
+    "id": 1750143742354
   }
 ]

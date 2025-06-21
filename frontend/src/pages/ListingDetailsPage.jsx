@@ -105,10 +105,12 @@ function ListingDetailsPage() {
               {listingDetails ? (
                 <>
                   <h2 className="property-title">{listingDetails.title}</h2>
-                  <p className="property-location">
-                    📍 {listingDetails.location}
-                  </p>
-                  <p className="property-price">${listingDetails.price}</p>
+
+                  <ul className="property-info">
+                    <li>💰 ${listingDetails.price}</li>
+                    <li>📍 {listingDetails.location}</li>
+                    <li>📄 Reference ID: {listingDetails.id}</li>
+                  </ul>
                   <ul className="property-features">
                     <li>🛏 {listingDetails.beds} Bedrooms</li>
                     <li>🛁 {listingDetails.baths} Bathrooms</li>
@@ -119,7 +121,7 @@ function ListingDetailsPage() {
                   </p>
                   {userDetails && (
                     <section className="property-user-details">
-                      <h2 className="property-user-title">Agent Details</h2>
+                      <h4 className="property-user-title">Agent Details</h4>
                       <p className="property-user">
                         Name: <strong>{userDetails.name}</strong>
                       </p>

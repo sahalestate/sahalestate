@@ -5,9 +5,8 @@
 
 .details-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, 1fr);
   gap: 2rem;
-  margin: 2rem;
 }
 
 .main-image {
@@ -41,38 +40,31 @@
 }
 
 .property-info-box {
-  background: var(--gray-mild);
-  padding: 2rem;
+  background: var(--background);
+  padding: 0 3rem;
   border-radius: 12px;
+  box-shadow: 0 4px 12px rgb(0 0 0 / 0.1);
 }
 
-.property-title {
-  font-size: 2.4rem;
-  color: var(--primary-Malachite);
-  margin-bottom: 0.5rem;
-}
-
-.property-location {
+.property-info {
+  display: flex;
+  gap: 2rem;
+  margin: 2rem 0;
   font-size: 1.4rem;
-  color: #555;
-  margin-bottom: 1rem;
-}
-
-.property-price {
-  font-size: 2rem;
-  font-weight: bold;
-  color: var(--primary-Selective-yellow);
-  margin-bottom: 1rem;
 }
 
 .property-features {
-  list-style: none;
   padding: 0;
   margin-bottom: 1.5rem;
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 0.8rem;
-  font-size: 1.2rem;
+  font-size: 1.3rem;
+}
+
+.property-title {
+  margin: 3rem 0;
+  border-bottom: 2px solid var(--gray-200);
 }
 
 .property-description {
@@ -82,24 +74,16 @@
   line-height: 1.6;
 }
 
-.contact-agent {
-  background-color: var(--secondary-Celestial-Blue);
-  color: white;
-  padding: 1rem 2rem;
+.property-user-details {
+  background-color: var(--secondary);
+  color: var(--text-inverse);
+  padding: 2rem;
   font-size: 1.4rem;
-  font-weight: bold;
-  border: none;
   border-radius: 30px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.contact-agent:hover {
-  background-color: var(--secondary-Mexican-pink);
 }
 
 /* Responsive */
-@media (max-width: 668px) {
+@media (max-width: 768px) {
   .details-grid {
     grid-template-columns: 1fr;
   }

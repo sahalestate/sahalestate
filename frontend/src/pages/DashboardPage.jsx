@@ -390,7 +390,7 @@ function DashboardPage() {
           <div className="dashboard-content">
             {activeTab === "listings" && (
               <section className="dashboard-section">
-                <div className="dashboard-section-title">Listings</div>
+                {/* <div className="dashboard-section-title">Listings</div> */}
                 <SearchForm onSearch={handleSearch} />
                 <form
                   onSubmit={
@@ -419,14 +419,7 @@ function DashboardPage() {
                     type="text"
                     className="dashboard-input"
                   />
-                  <input
-                    name="images"
-                    type="file"
-                    onChange={handleListingChange}
-                    placeholder="Images"
-                    className="dashboard-input"
-                    multiple
-                  />
+
                   <input
                     name="beds"
                     value={listingForm.beds}
@@ -458,6 +451,16 @@ function DashboardPage() {
                     required
                     className="dashboard-textarea description-field"
                   ></textarea>
+
+                  <input
+                    name="images"
+                    type="file"
+                    onChange={handleListingChange}
+                    placeholder="Images"
+                    className="dashboard-input"
+                    multiple
+                  />
+
                   <button type="submit" className="dashboard-link">
                     {editingListing ? "Update" : "Add"}
                   </button>

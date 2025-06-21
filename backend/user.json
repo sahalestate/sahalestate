@@ -9,21 +9,21 @@
     "role": "admin"
   },
   {
-    "id": 1749813395502,
-    "name": "Ahmed Abdi",
-    "email": "ahmed@mail.com",
-    "password": "$2b$10$KUmLi9c8XRASPY8.ebUAaemZ10ndmwxllxtJ9snTuqsmnwDFAVt4O",
-    "address": "Jijiga",
-    "phone": "00123456789",
-    "role": "user"
-  },
-  {
     "id": 1749813976813,
     "name": "Fartun Shibli",
     "email": "fartun@mail.com",
     "password": "$2b$10$Xhg8PNmMskHoVuZiBpd9hOFxphUaO67sCcXtKe2rDxkQec4oa/yrG",
     "address": "London",
     "phone": "09785124569",
+    "role": "agent"
+  },
+  {
+    "id": 1750143071561,
+    "name": "Abdi Farax",
+    "email": "abdi@mail.com",
+    "password": "$2b$10$w2cjpx/P3BH2lAdgFhw0VuUROWUIjb4BV862DHQbrjwmHZwzQHBga",
+    "address": "Mogadishu",
+    "phone": "01234567895",
     "role": "agent"
   }
 ]

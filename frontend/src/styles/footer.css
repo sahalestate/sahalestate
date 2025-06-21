@@ -1,7 +1,6 @@
-/* Improved Footer Visibility */
 .footer {
   background: var(--gray-700);
-  color: var(--primary-card);
+  color: var(--text-inverse);
   text-align: left;
   padding: 3rem 0;
   font-weight: 600;

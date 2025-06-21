@@ -16,14 +16,17 @@ function Listings({ listings }) {
               style={{ cursor: "pointer" }}
             />
           </Link>
+          <h3>{listing.title}</h3>
           <div className="property-info">
-            <h3>{listing.title}</h3>
-            <p>{listing.location}</p>
-            <p className="property-price">${listing.price}</p>
+            <ul className="property-details">
+              <li>📍 {listing.location}</li>
+              <li>💰 ${listing.price}</li>
+            </ul>
+
             <ul className="property-features">
               <li>🛏 {listing.beds} Bedrooms</li>
               <li>🛁 {listing.baths} Bathrooms</li>
-              <li>📐 {listing.area}</li>
+              <li>📐 {listing.area} m²</li>
             </ul>
           </div>
         </div>
