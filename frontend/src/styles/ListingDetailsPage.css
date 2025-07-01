@@ -18,11 +18,11 @@
   margin-bottom: 1rem;
 }
 
-.thumbnails {
+/* .thumbnails {
   display: flex;
   gap: 0.5rem;
   margin-top: 0.5rem;
-}
+} */
 
 .thumbnail {
   width: 80px;

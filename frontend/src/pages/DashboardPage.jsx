@@ -508,19 +508,13 @@ function DashboardPage() {
                 )}
 
                 <ul>
+                  <h1>Listings Details</h1>
                   {filteredListings.map((listing) => (
                     <li key={listing.id} className="listing-item">
                       <span className="id">{listing.id}</span>
-
                       <span className="title">{listing.title}</span>
                       <span className="location">{listing.location}</span>
-                      {/* <span className="price">{listing.price}</span>
-                      <span className="images">
-                        {(listing.images || []).join(", ")}
-                      </span>
-                      <span className="beds">{listing.beds}</span>
-                      <span className="baths">{listing.baths}</span>
-                      <span className="area">{listing.area}</span> */}
+
                       <button
                         className="dashboard-link"
                         onClick={() => handleEditListing(listing)}

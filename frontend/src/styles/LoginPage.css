@@ -1,5 +1,5 @@
 .login-container {
-  max-width: 410px;
+  max-width: 60rem;
   margin: 4.5rem auto;
   padding: 2.7rem 2.2rem;
   background: var(--primary-card);
@@ -7,23 +7,18 @@
   box-shadow: 0 4px 24px var(--gray-200);
   display: flex;
   flex-direction: column;
-  align-items: center;
+  /* align-items: center; */
 }
 
 .login-container h2 {
-  text-align: center;
   color: var(--primary-accent);
   margin-bottom: 2.2rem;
-  font-size: 2.1rem;
-  font-weight: 900;
-  letter-spacing: -1px;
 }
 
 .login-container form {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
-  width: 100%;
+  width: 80%;
 }
 
 .login-container form > div {
@@ -33,11 +28,8 @@
 }
 
 .login-container label {
-  font-weight: 700;
+  font-weight: 600;
   margin-bottom: 0.4rem;
-  color: var(--primary-text);
-  font-size: 1.08rem;
-  letter-spacing: 0.01em;
 }
 
 .login-container input[type="email"],
@@ -45,38 +37,29 @@
   padding: 1rem 1.2rem;
   border: 1.5px solid var(--primary-accent);
   border-radius: 9px;
-  font-size: 1.8rem;
   outline: none;
-  background: var(--primary-bg);
-  transition: border-color 0.18s, box-shadow 0.18s;
-  box-shadow: 0 2px 8px var(--gray-100);
-  color: var(--primary-text);
 }
 
 .login-container input[type="email"]:focus,
 .login-container input[type="password"]:focus {
-  border-color: var(--secondary-accent);
-  background: var(--primary-card);
   box-shadow: 0 0 0 2px var(--secondary-accent);
 }
 
 .login-container button[type="submit"] {
   background: var(--primary-accent);
-  color: var(--primary-card);
+  color: var(--text-inverse);
   padding: 0.95rem 0;
   border: none;
   border-radius: 30px;
-  font-size: 1.18rem;
   font-weight: 800;
   cursor: pointer;
   margin-top: 1rem;
   transition: background 0.18s, color 0.18s, box-shadow 0.18s;
-  box-shadow: 0 2px 8px var(--primary-accent);
+  /* box-shadow: 0 2px 8px var(--primary-accent); */
 }
 
 .login-container button[type="submit"]:hover {
   background: var(--secondary-accent);
-  color: var(--primary-card);
   box-shadow: 0 4px 18px var(--secondary-accent);
 }
 
@@ -92,41 +75,16 @@
 }
 
 .login-container p {
-  text-align: center;
   margin-top: 1.5rem;
-  font-size: 1.05rem;
-  color: var(--primary-text);
 }
 
 .login-container a {
   color: var(--primary-accent);
   text-decoration: underline;
-  font-weight: 700;
+  font-weight: 600;
   transition: color 0.18s;
 }
 
 .login-container a:hover {
   color: var(--secondary-accent);
-}
-
-@media (max-width: 600px) {
-  .login-container {
-    padding: 1.2rem 0.5rem;
-    border-radius: 0.7rem;
-  }
-
-  .login-container h2 {
-    font-size: 1.5rem;
-  }
-
-  .login-container input[type="email"],
-  .login-container input[type="password"] {
-    font-size: 1rem;
-    padding: 0.8rem 0.7rem;
-  }
-
-  .login-container button[type="submit"] {
-    font-size: 1rem;
-    padding: 0.8rem 0;
-  }
 }

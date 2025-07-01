@@ -62,5 +62,25 @@
     "description": "No description avaliable",
     "userId": "1750143071561",
     "id": 1750143742354
+  },
+  {
+    "title": "Modern House",
+    "location": "Mogadishu",
+    "price": "1234",
+    "images": [
+      "home1.jpg",
+      "home2.jpg",
+      "home3.jpg",
+      "home4.jpg",
+      "home5.jpg",
+      "home6.jpg",
+      "home7.jpg"
+    ],
+    "beds": "2",
+    "baths": "1",
+    "area": "1245",
+    "description": "the description",
+    "userId": "1749813976813",
+    "id": 1751282356652
   }
 ]
